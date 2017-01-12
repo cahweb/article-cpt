@@ -1,4 +1,4 @@
-# Common - Template
+# Common - Article
 ## v0.1.0
 
-Template for all the common CPT plugins I have to make.
+WordPress Custom post type plugin for Articles CPT on the UCF CAH The Florida Review website.
