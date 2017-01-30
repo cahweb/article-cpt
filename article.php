@@ -42,6 +42,12 @@ function article_create_type() {
 	register_post_type( 'article' , $args );
 }
 
+add_action( 'init', 'add_category_taxonomy_to_article' );
+
+function add_category_taxonomy_to_article() {
+	register_taxonomy_for_object_type( 'category', 'article' );
+}
+
 add_action("admin_init", "article_init");
 add_action('save_post', 'article_save');
 
@@ -53,10 +59,26 @@ function article_init() {
 
 	add_meta_box("article-abstract-meta", "Abstract", "article_meta_abstract", "article", "normal", "high");
 
-	add_meta_box("article-image-meta", "Author Image", "article_meta_image", "article", "normal", "high");
-
 	add_meta_box("article-author-meta", "Author Information", "article_meta_author", "article", "normal", "high");
+
+	add_meta_box("article-review-meta", "For Reviews Only", "article_meta_review", "article", "normal", "high");
 }
+
+add_filter( 'kdmfi_featured_images', function( $featured_images ) {
+    $args = array(
+        'id' => 'author-image',
+        'desc' => 'A picture of the author.',
+        'label_name' => 'Author Image',
+        'label_set' => 'Set Author Image',
+        'label_remove' => 'Remove Author Image',
+        'label_use' => 'Set Author Image',
+        'post_type' => array( 'article' ),
+    );
+
+    $featured_images[] = $args;
+
+    return $featured_images;
+});
 
 // Information
 function article_meta_info() {
@@ -85,22 +107,24 @@ function article_meta_abstract() {
 	wp_editor($custom['abstract'][0], 'abstract', $settings['md']);
 }
 
-// Author Image
-function article_meta_image() {
-	global $post;
-	global $settings;
-	$custom = get_post_custom($post->ID);
-
-	wp_editor($custom['auth-image'][0], 'auth-image', $settings['md']);
-}
-
 // Author Information
 function article_meta_author() {
 	global $post; // Get global WP post var
     $custom = get_post_custom($post->ID); // Set our custom values to an array in the global post var
 
     // Form markup 
+    wp_editor($custom['auth-info'][0], 'auth-info', $settings['md']);
+
     include_once('views/author.php');
+}
+
+// For Reviews Only
+function article_meta_review() {
+	global $post;
+	global $settings;
+	$custom = get_post_custom($post->ID);
+
+	include_once("views/review.php");
 }
 
 // Save our variables
@@ -115,7 +139,13 @@ function article_save() {
 	update_post_meta($post->ID, "doi", $_POST["doi"]);
 	update_post_meta($post->ID, "body", $_POST["body"]);
 	update_post_meta($post->ID, "abstract", $_POST["abstract"]);
-	update_post_meta($post->ID, "auth-image", $_POST["auth-image"]);
+	update_post_meta($post->ID, "auth-url", $_POST["auth-url"]);
+	update_post_meta($post->ID, "auth-info", $_POST["auth-info"]);
+	update_post_meta($post->ID, "auth-rev", $_POST["auth-rev"]);
+	update_post_meta($post->ID, "title-rev", $_POST["title-rev"]);
+	update_post_meta($post->ID, "url-rev", $_POST["url-rev"]);
+
+
 }
 
 // Settings array. This is so I can retrieve predefined wp_editor() settings to keep the markup clean
