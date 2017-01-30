@@ -47,7 +47,7 @@ add_action('save_post', 'article_save');
 
 // Add the meta boxes to our CPT page
 function article_init() {
-	add_meta_box("article-info-meta", "Required Information", "article_meta_info", "article", "normal", "high");
+	add_meta_box("article-info-meta", "Basic Information", "article_meta_info", "article", "normal", "high");
 
 	add_meta_box("article-body-meta", "Body", "article_meta_body", "article", "normal", "high");
 

@@ -1,6 +1,6 @@
 <div class="inner-meta">
 
-	<label>DOI</label>
+	<label>Author(s)</label>
 	<input type="text" name="authors" value="<?php echo $custom['authors'][0]; ?>">
 	<br>
 
