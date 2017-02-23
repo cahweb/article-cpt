@@ -37,6 +37,7 @@ function article_create_type() {
 	        'supports' => array(
 	            'title',
 	            'excerpt',
+	            'editor',
 	            'thumbnail')
 	    );
 	register_post_type( 'article' , $args );
