@@ -56,8 +56,6 @@ add_action('save_post', 'article_save');
 function article_init() {
 	add_meta_box("article-info-meta", "Basic Information", "article_meta_info", "article", "normal", "high");
 
-	add_meta_box("article-body-meta", "Body", "article_meta_body", "article", "normal", "high");
-
 	add_meta_box("article-abstract-meta", "Abstract", "article_meta_abstract", "article", "normal", "high");
 
 	add_meta_box("article-author-meta", "Author Information", "article_meta_author", "article", "normal", "high");
@@ -88,15 +86,6 @@ function article_meta_info() {
 
     // Form markup 
     include_once('views/info.php');
-}
-
-// Body
-function article_meta_body() {
-	global $post;
-	global $settings;
-	$custom = get_post_custom($post->ID);
-
-	wp_editor($custom['body'][0], 'body', $settings['md']);
 }
 
 // Abstract
