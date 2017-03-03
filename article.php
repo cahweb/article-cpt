@@ -34,6 +34,9 @@ function article_create_type() {
 	        'rewrite' => array('slug' => 'article'),
 			'menu_icon'  => 'dashicons-media-document',
 	        'query_var' => true,
+	        'show_in_rest'       => true,
+  			'rest_base'          => 'article',
+  			'rest_controller_class' => 'WP_REST_Posts_Controller',
 	        'supports' => array(
 	            'title',
 	            'excerpt',
