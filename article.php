@@ -41,7 +41,8 @@ function article_create_type() {
 	            'title',
 	            'excerpt',
 	            'editor',
-	            'thumbnail')
+	            'thumbnail'),
+            'taxonomies' => array('category', 'post_tag')
 	    );
 	register_post_type( 'article' , $args );
 }
@@ -87,7 +88,7 @@ function article_meta_info() {
 	global $post; // Get global WP post var
     $custom = get_post_custom($post->ID); // Set our custom values to an array in the global post var
 
-    // Form markup 
+    // Form markup
     include_once('views/info.php');
 }
 
@@ -105,7 +106,7 @@ function article_meta_author() {
 	global $post; // Get global WP post var
     $custom = get_post_custom($post->ID); // Set our custom values to an array in the global post var
 
-    // Form markup 
+    // Form markup
     wp_editor($custom['auth-info'][0], 'auth-info', $settings['md']);
 
     include_once('views/author.php');
