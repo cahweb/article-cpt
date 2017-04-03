@@ -29,6 +29,7 @@ function article_create_type() {
 	      'label' => 'Articles',
 	        'public' => true,
 	        'show_ui' => true,
+            'menu_position' => 5,
 	        'capability_type' => 'post',
 	        'hierarchical' => false,
 	        'rewrite' => array('slug' => 'article'),
