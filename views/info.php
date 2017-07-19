@@ -1,7 +1,15 @@
 <div class="inner-meta">
 
-	<label>Author(s): </label>
-	<input type="text" name="authors" value="<?php echo $custom['authors'][0]; ?>">
+	<label>First Author Last Name: </label>
+	<input type="text" name="author1-last" value="<?php echo $custom['author1-last'][0]; ?>">
+	<br>
+
+	<label>First Author First Name(s): </label>
+	<input type="text" name="author1-first" value="<?php echo $custom['author1-first'][0]; ?>"> &nbsp;<span><em>Include middle names/initials here</em></span>
+	<br>
+
+	<label>Other Author(s): </label>
+	<input type="text" name="other-authors" value="<?php echo $custom['other-authors'][0]; ?>"> &nbsp;<span><em>Separate each name by comma</em></span>
 	<br>
 
 	<label>Issue: </label>

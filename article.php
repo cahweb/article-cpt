@@ -89,6 +89,7 @@ function article_meta_info() {
 	global $post; // Get global WP post var
     $custom = get_post_custom($post->ID); // Set our custom values to an array in the global post var
 
+    $authors = maybe_unserialize( $custom['authors'][0] );
     // Form markup
     include_once('views/info.php');
 }
@@ -126,7 +127,9 @@ function article_meta_review() {
 function article_save() {
 	global $post;
 
-	update_post_meta($post->ID, "authors", $_POST["authors"]);
+	update_post_meta($post->ID, 'author1-last', $_POST['author1-last']);
+    update_post_meta($post->ID, 'author1-first', $_POST['author1-first']);
+    update_post_meta($post->ID, 'other-authors', $_POST['other-authors']);
 	update_post_meta($post->ID, "issue", $_POST["issue"]);
 	update_post_meta($post->ID, "start", $_POST["start"]);
 	update_post_meta($post->ID, "end", $_POST["end"]);
@@ -140,8 +143,68 @@ function article_save() {
 	update_post_meta($post->ID, "title-rev", $_POST["title-rev"]);
 	update_post_meta($post->ID, "url-rev", $_POST["url-rev"]);
 
-
 }
+
+
+/**
+ * Parse the byline of the article into an array of names, so we can sort and search by author name, down the road.
+ *
+ * @param   string  $authors        The byline, taken from the Authors text field in the Basic Information meta box.
+ *
+ * @return  array   $author_array   An array containing the original byline string at index 0, and a series of author
+ *                                      arrays with names separated into 'last', 'first', and 'middle' associative fields.
+ */
+function split_author_names( $authors ) {
+
+    // The possible ways to separate names in the bylines.
+    $patt1 = '/ \sand\s | ,\sand\s | ,\s | \sfor\sTFR | \s\&\s /x';
+
+    // Split the byline by our custom delimiter pattern, above. This should be an array of the full authors' names.
+    $author_names_array = preg_split( $patt1, $authors);
+
+    // Create the array we'll return.
+    $author_array = array();
+    // Keep the original byline string, for ease of printing elsewhere.
+    array_push( $author_array, $authors );
+
+    // Split each author into their component names. At the moment, this only works for Western-style names
+    // (i.e., surname last); I haven't yet figured out how I might ascertain if a certain name is supposed to
+    // be surname-first, short of requesting extra input from the user.
+    foreach ( $author_names_array as $name ) {
+
+        // Break the array apart. Spaces should be the only delimiter we care about, at this point.
+        $name_array_raw = explode(' ', $name );
+
+        // Get the length of the array, for reference.
+        $n_len = count( $name_array_raw );
+
+        // Create a new array element to hold the author's name info.
+        $new_author = array(
+            'last' => $name_array_raw[$n_len - 1],
+            'first' => $name_array_raw[0]
+        );
+
+        // Catch middle names, if they're present.
+        if ( $n_len > 2 ) {
+
+            // Some people have more than one middle name, so we check for that.
+            for ( $i = 1; $i < $n_len - 1; $i++ ) {
+                $new_author['middle'] .= $name_array_raw[$i];
+
+                if ( ($i + 1) != ($n_len - 1) ) {
+                    $new_author['middle'] .= " ";
+                } // End if
+            } // End for
+        } // End if
+
+        // Add the new author to the author array.
+        array_push( $author_array, $new_author );
+    } // End foreach
+
+    // Send the author array back to the post save function.
+    return $author_array;
+
+} // End split_author_names()
 
 // Settings array. This is so I can retrieve predefined wp_editor() settings to keep the markup clean
 $settings = array (
